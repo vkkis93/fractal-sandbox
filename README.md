@@ -6,7 +6,7 @@
 - [Requirements](#requirements)
 - [Testing locally](#testing-locally)
 - [Unit tests](#unit-tests)
-
+- [CI/CD](#ci-cd)
 
 
 # Install
@@ -47,11 +47,15 @@ For running you need to run command ```sls offline``` in folder ```functions```.
 App will be ready accept requests via ```http://localhost:3000/```
 
 # Unit tests
-As a basis for unit testing was chosen ```jest```
-All unit tests are located in folder ```tests```
+As a basis for unit testing was chosen ```jest```.
+All unit tests are located in folder ```tests```.
 For running tests
 ```bash
 npm run jest
 ```
 
+# CI/CD
 
+Implemented CI/CD by using AWS CodePipeline/ AWS Codebuild/ AWS CodeDeploy.
+AWS automatically detects new changes and uploads it.
+In CI section we run unit tests and if tests passed - codedeploy deploys latest changes.

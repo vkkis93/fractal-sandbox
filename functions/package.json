@@ -1,0 +1,11 @@
+{
+  "name": "Fractal",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "author": "Viktor Kis",
+  "license": "ISC",
+  "dependencies": {
+    "fractalsdk": "github:jonnyacl/fractalsdk"
+  }
+}

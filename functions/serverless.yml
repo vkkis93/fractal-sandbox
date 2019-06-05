@@ -1,0 +1,128 @@
+service: Company
+
+frameworkVersion: ">=1.13.0 <2.0.0"
+
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: ${opt:stage,'local'}
+  cfLogs: true
+  region: eu-west-1
+  versionFunctions: false
+  environment:
+    API_KEY: ${self:custom.apiKey.${self:provider.stage}}
+    PARTNER_ID: ${self:custom.partnerId.${self:provider.stage}}
+
+
+plugins:
+  - serverless-offline
+package:
+  individually: true
+  excludeDevDependencies: false
+  exclude:
+    - ./**
+  include:
+    - ./node_modules/**
+
+
+
+custom:
+  stages:
+    - loca
+    - dev
+    - prod
+  apiKey:
+    local: wqsw5DXzey8M3DUrzlDH17XoqrhKzY0Q6QcmnNXh
+    dev: wqsw5DXzey8M3DUrzlDH17XoqrhKzY0Q6QcmnNXh
+    prod: wqsw5DXzey8M3DUrzlDH17XoqrhKzY0Q6QcmnNXh
+  partnerId:
+    local: viktor.kis@techmagic.co
+    dev: viktor.kis@techmagic.co
+    prod: viktor.kis@techmagic.co
+
+functions:
+  auth:
+    handler: auth/index.handler
+    cfLogs: true
+    memorySize: 256
+    timeout: 15
+    package:
+      include:
+        - auth/**
+    events:
+      - http:
+          path: v1/token
+          method: post
+  getCompanies:
+    handler: company/index.getCompanies
+    cfLogs: true
+    memorySize: 256
+    timeout: 15
+    package:
+      include:
+         - company/**
+    events:
+        - http:
+            path: /v1/companies
+            method: get
+            integration: lambda
+            cors: true
+            request:
+              template:
+                application/json: "{\"token\" : \"$input.params('Authorization')\", \"body\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\\\\'\",\"'\") \"}"
+
+  getCompany:
+    handler: company/index.getCompany
+    cfLogs: true
+    memorySize: 256
+    timeout: 15
+    package:
+      include:
+         - company/**
+    events:
+      - http:
+          path: /v1/companies/{companyId}
+          method: get
+          integration: lambda
+          cors: true
+          request:
+            template:
+              application/json: "{\"companyId\":\"$input.params('companyId')\", \"token\" : \"$input.params('Authorization')\",   \"body\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\\\\'\",\"'\") \"}"
+
+
+  getBankAccounts:
+    handler: bank/index.getBankAccounts
+    cfLogs: true
+    memorySize: 256
+    timeout: 15
+    package:
+      include:
+        - bank/**
+    events:
+      - http:
+          path: /v1/bank/{bankId}/accounts
+          method: get
+          integration: lambda
+          cors: true
+          request:
+            template:
+              application/json: "{\"bankId\":\"$input.params('bankId')\", \"companyId\":\"$input.params('companyId')\", \"token\" : \"$input.params('Authorization')\" , \"body\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\\\\'\",\"'\") \"}"
+
+  getBankTransactions:
+    handler: bank/index.getBankTransactions
+    cfLogs: true
+    memorySize: 256
+    timeout: 15
+    package:
+      include:
+       - bank/**
+    events:
+      - http:
+          path: /v1/bank/{bankId}/accounts/{accountId}/transactions
+          method: get
+          integration: lambda
+          cors: true
+          request:
+            template:
+              application/json: "{\"bankId\":\"$input.params('bankId')\", \"companyId\":\"$input.params('companyId')\",  \"accountId\":\"$input.params('accountId')\", \"token\" : \"$input.params('Authorization')\" , \"body\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\\\\'\",\"'\") \"}"

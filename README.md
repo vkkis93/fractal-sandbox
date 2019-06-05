@@ -1,12 +1,14 @@
 [![serverless](http://public.serverless.com/badges/v3.svg)](http://www.serverless.com)
 # Fractal
 
+It's serverless project which uses AWS Lambda && AWS API Gateway.
+
 ## Documentation
 - [Install](#install)
 - [Requirements](#requirements)
 - [Testing locally](#testing-locally)
 - [Unit tests](#unit-tests)
-- [CI/CD](#ci-cd)
+- [CI/CD](#ci/cd)
 
 
 # Install
@@ -19,9 +21,11 @@ or
 npm install
 ```
 
+and the same step repeat for folder ```functions```.
+
 # Requirements
 On your PC you should have install
-- [Serverless](https://serverless.com) -*  npm install -g serverless*
+- [Serverless](https://serverless.com) -*  npm install -g serverless@1.43.0*
 - Node.js >= 8.10
 - NPM or Yarn
 
@@ -37,12 +41,13 @@ export AWS_SECRET_ACCESS_KEY=<your-secret-key-here>
 ```
 Now you are ready to deploy serverless stack
 ```bash
-sls deploy --stage=#{stage}
+cd functions;
+sls deploy --stage=REPLACE_WITH_STAGE_NAME
 ```
 All stages you can find in ```functions/serverless.yml``` in section ```custom```
 
 # Testing locally
-For local testing we use [serverless-offline](#https://github.com/dherault/serverless-offline).
+For local testing we use [serverless-offline](https://github.com/dherault/serverless-offline).
 For running you need to run command ```sls offline``` in folder ```functions```.
 App will be ready accept requests via ```http://localhost:3000/```
 

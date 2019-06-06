@@ -62,5 +62,7 @@ npm run jest
 # CI/CD
 
 Implemented CI/CD by using AWS CodePipeline/ AWS Codebuild/ AWS CodeDeploy.
+
 AWS automatically detects new changes and uploads it.
+
 In CI section we run unit tests and if tests passed - codedeploy deploys latest changes.
